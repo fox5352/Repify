@@ -12,7 +12,7 @@ if (!PUBLISHABLE_KEY) {
 export default function Rootlayout() {
 
   return (
-    <div>
+    <div className="">
       <ClerkProvider publishableKey={PUBLISHABLE_KEY} afterSignOutUrl="/">
         <Header />
         <main>
