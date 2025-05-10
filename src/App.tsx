@@ -10,6 +10,7 @@ function App() {
       <Routes>
         <Route element={<Rootlayout />}>
           <Route index element={<Home />} />
+          <Route path="*" element={<h2>Not Found</h2>} />
         </Route>
       </Routes>
     </>
