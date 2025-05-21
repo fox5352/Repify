@@ -114,7 +114,15 @@
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
   }
+}
+
+
+:root {
+  --error-color: crimson;
+  --ac-color: #00bc7d;
+  --warning-color: #fbb900;
 }

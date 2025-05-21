@@ -2,6 +2,7 @@ import { ClerkProvider } from "@clerk/clerk-react";
 import { Outlet } from "react-router";
 
 import { Header } from "../ui/Header";
+import Notify, { NotifyProvider } from "@/ui/Notify";
 
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY
 
@@ -12,12 +13,15 @@ if (!PUBLISHABLE_KEY) {
 export default function Rootlayout() {
 
   return (
-    <div className="">
+    <div>
       <ClerkProvider publishableKey={PUBLISHABLE_KEY} afterSignOutUrl="/">
-        <Header />
-        <main>
-          <Outlet />
-        </main>
+        <NotifyProvider>
+          <Header />
+          <main>
+            <Outlet />
+          </main>
+          <Notify />
+        </NotifyProvider>
       </ClerkProvider>
     </div>
   )
