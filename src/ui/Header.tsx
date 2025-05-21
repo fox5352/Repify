@@ -10,10 +10,10 @@ import AppBar from "./AppBar";
 export function Header() {
   const { pathname } = useLocation();
 
-  const links: { text: string, to: string }[] = [
-    { text: "Feed", to: "/" },
-    { text: "Saved", to: "/auth/dashboard" },
-    { text: "Profile", to: "/auth/user" }
+  const links: { text: string, to: string, desc: string }[] = [
+    { text: "Feed", to: "/", desc: "home page with feed of others posts" },
+    { text: "Create", to: "/auth/create", desc: "create new post or workout routine" },
+    { text: "Profile", to: "/auth/user", desc: "Users profile page read stats and more" }
   ]
 
   const mapper = ({ text, to }: { text: string, to: string }, index: number): ReactNode => {
