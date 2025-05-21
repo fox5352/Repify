@@ -124,5 +124,7 @@
 :root {
   --error-color: crimson;
   --ac-color: #00bc7d;
+  --ac-color-two: #00bba6;
+  --ac-color-three: #00d5be;
   --warning-color: #fbb900;
 }

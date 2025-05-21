@@ -17,7 +17,7 @@ export default function Rootlayout() {
       <ClerkProvider publishableKey={PUBLISHABLE_KEY} afterSignOutUrl="/">
         <NotifyProvider>
           <Header />
-          <main>
+          <main className="w-full max-w-3xl mx-auto">
             <Outlet />
           </main>
           <Notify />
