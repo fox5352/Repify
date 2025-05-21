@@ -10,6 +10,7 @@ interface NotifyState {
 
 interface Actions {
   trigger: (message: string, type?: NotifyType) => void;
+  clear: () => void
 }
 
 const NotifyContext = createContext<NotifyState & Actions | null>(null);
@@ -23,6 +24,11 @@ const notifyReducer = (state: NotifyState, action: { type: string, payload?: Not
         message: payload?.message,
         type: payload?.type
       };
+    } case "clear": {
+      return {
+        type: undefined,
+        message: undefined
+      } as NotifyState
     } default: {
       return state;
     }
@@ -39,9 +45,16 @@ export function NotifyProvider({ children }: { children: ReactNode | string }) {
     });
   }
 
+  const clear = () => {
+    dispatch({
+      type: "clear"
+    })
+  }
+
   const value = {
     ...state,
-    trigger
+    trigger,
+    clear
   }
 
   return (
@@ -58,7 +71,7 @@ export const useNotify = () => {
 }
 
 export default function Notify() {
-  const { message, type } = useNotify();
+  const { message, type, clear } = useNotify();
   const map: Record<string, string> = {
     // bg
     "error-bg": "var(--error-color)",
@@ -71,8 +84,11 @@ export default function Notify() {
   }
 
   useEffect(() => {
-    if (message) {
+    if (message != undefined) {
       toast(message)
+      setTimeout(() => {
+        clear();
+      }, (type == "error" ? 10_000 : 3000) + 200)
     }
   }, [message, type])
 
