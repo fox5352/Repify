@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils";
+import { acn, cn } from "@/lib/utils";
 import { deleteWorkoutRoutine, type DatabaseMetaData, type WorkoutRoutine, type WorkoutType } from "../model/workoutroutine.model";
 
 import { Card, CardHeader, CardContent, CardTitle, CardAction } from "@/components/ui/card";
@@ -8,10 +8,12 @@ import { BookmarkIcon, Trash2 } from "lucide-react";
 import { getUser } from "@/model/user.model";
 import { Button } from "@/components/ui/button";
 import { useNotify } from "./Notify";
+import { createBookMarker } from "@/model/bookmarker.model";
 
-export default function WorkoutRoutineCard({ id, user_id, title, workouts, className, filter }: WorkoutRoutine & DatabaseMetaData & { className?: string, filter: (id: string) => void }) {
+export default function WorkoutRoutineCard({ id, user_id, title, workouts, className, filter }: WorkoutRoutine & DatabaseMetaData & { className?: string, filter?: (id: string) => void }) {
   const { trigger } = useNotify();
   const [isOwnerViewing, setIsOwnerViewing] = useState(false);
+  const [isBookmarked, setIsBookmarked] = useState(false);
 
   const handleDelete = async () => {
     try {
@@ -19,9 +21,20 @@ export default function WorkoutRoutineCard({ id, user_id, title, workouts, class
 
       const succsess = await deleteWorkoutRoutine(id);
 
-      if (succsess) filter(id);
+      if (succsess && filter) filter(id);
     } catch (error) {
       trigger("failed to delete post", "error");
+      console.error(error);
+    }
+  }
+
+  const handleBoomark = async () => {
+    try {
+      await createBookMarker(id);
+
+      setIsBookmarked(true);
+    } catch (error) {
+      trigger("failed to bookmark post", "info");
       console.error(error);
     }
   }
@@ -85,8 +98,8 @@ export default function WorkoutRoutineCard({ id, user_id, title, workouts, class
         </Table>
       </CardContent>
       <CardAction className="w-full space-x-2 px-2 md:px-6">
-        <Button size="icon" className="bg-white text-black dark:bg-zinc-950 dark:text-white" disabled>
-          <BookmarkIcon className="text-amber-500" />
+        <Button size="icon" className="bg-white text-black dark:bg-zinc-950 dark:text-white" onClick={handleBoomark}>
+          <BookmarkIcon className={`text-amber-500 ${acn(isBookmarked, "bg-amber-500", "text-white")}`} />
         </Button>
         {isOwnerViewing &&
           (<Button size="icon" className="bg-white text-black dark:bg-zinc-950 dark:text-white" onClick={handleDelete}>

@@ -68,7 +68,7 @@ export async function uploadWorkoutRoutine(workoutRoutine: WorkoutRoutine): Prom
 
 
 
-type getWorkoutRoutineType = WorkoutRoutine & DatabaseMetaData
+export type getWorkoutRoutineType = WorkoutRoutine & DatabaseMetaData
 
 export async function getWorkoutRoutines(): Promise<getWorkoutRoutineType[] | null> {
 	try {

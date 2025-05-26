@@ -1,6 +1,7 @@
 import { Tabs, TabsList } from "@/components/ui/tabs"
 import { TabsContent, TabsTrigger } from "@radix-ui/react-tabs"
 import Posts from "./ProfilesPosts"
+import { Bookmarkers } from "./ProfileBookmarkers"
 
 export default function ProfileBody({ id, isLoaded }: { id: string, isLoaded: boolean }) {
 
@@ -16,7 +17,7 @@ export default function ProfileBody({ id, isLoaded }: { id: string, isLoaded: bo
         <Posts id={id} />
       </TabsContent>
       <TabsContent value="bookmarks">
-        <div>gyat</div>
+        <Bookmarkers />
       </TabsContent>
     </Tabs>
   )

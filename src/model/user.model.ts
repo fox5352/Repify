@@ -136,3 +136,35 @@ export async function tryIncrementDaysActive() {
 		return false;
 	}
 }
+
+export async function incrementBookmarkerLength(): Promise<boolean> {
+	try {
+		const user = await getUser();
+
+		if (!user) return false;
+
+		await db.from("Users").update({
+			bookmarksLength: user.bookmarksLength + 1
+		}).eq("id", user.id);
+
+		return true;
+	} catch (error) {
+		return false;
+	}
+}
+
+export async function decrementBookmarkerLength(): Promise<boolean> {
+	try {
+		const user = await getUser();
+
+		if (!user) return false;
+
+		await db.from("Users").update({
+			bookmakersLength: user.bookmarksLength - 1
+		}).eq("id", user.id);
+
+		return true;
+	} catch (error) {
+		return false;
+	}
+}
