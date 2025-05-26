@@ -1,4 +1,3 @@
-import { ClerkProvider } from "@clerk/clerk-react";
 import { Outlet } from "react-router";
 
 import { Header } from "../ui/Header";
