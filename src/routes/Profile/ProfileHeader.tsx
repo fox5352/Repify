@@ -3,7 +3,7 @@ import { motion } from "framer-motion"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Bookmark, Calendar, Trophy, User } from "lucide-react"
+import { Bookmark, Calendar, Trophy } from "lucide-react"
 
 interface ProfileProps {
   username: string

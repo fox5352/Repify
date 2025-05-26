@@ -1,7 +1,7 @@
 import { db } from "./database.ts";
 import { getUser } from "./user.model.ts";
 
-interface DatabaseMetaData {
+export interface DatabaseMetaData {
 	id: string,
 	created_at: string,
 	user_id: string
@@ -28,7 +28,7 @@ async function insertWorkoutSet(set: WorkoutType & { workout_routine_id: string 
 			sets: set.sets,
 			weight: set.weight,
 			reps: set.reps || null,
-			time: set.reps || null
+			time: set.time || null
 		})
 		return true
 	} catch (error) {

@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import ProfileSection from "./ProfileHeader";
 import SkeletionBox from "@/components/ui/SkeletonBox";
-import { getUser, type UserData } from "@/model/database";
+import { getUser, type UserData } from "@/model/user.model";
+import ProfileBody from "./ProfileBody";
 
 export default function Profile() {
   const [user, setUser] = useState<UserData | null>(null);
@@ -36,7 +37,8 @@ export default function Profile() {
             <ProfileSection hasImage={user.hasImage} imageUrl={user.imageUrl} username={user.username} activeDays={user.activeDays} bookmarksLength={user.bookmarksLength} />
           )
       }
-      <div>Lorem ipsum dolor sit amet consectetur adipisicing elit. Mollitia facilis ducimus dolorem cum rem neque nobis eveniet, libero quia ut ipsa molestias obcaecati ab accusamus, facere earum non quis debitis.</div>
+      {user &&
+        <ProfileBody id={user?.id} isLoaded={isLoaded} />}
     </section>
   )
 }

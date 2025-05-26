@@ -1,4 +1,4 @@
-import { useMemo, useState, type ChangeEvent, type FormEvent } from "react";
+import { useEffect, useMemo, useState, type ChangeEvent, type FormEvent } from "react";
 import { Label } from "@radix-ui/react-label";
 
 import { isCleanText } from "@/lib/utils";
@@ -11,13 +11,10 @@ import InputWithLabel from "./components/InputWithLabel";
 import { useNotify } from "@/ui/Notify";
 import { uploadWorkoutRoutine, type WorkoutRoutine, type WorkoutType } from "@/model/workoutroutine.model";
 
-
-
 interface WorkoutRotine {
   title: string;
   workouts: Record<string, WorkoutType>;
 };
-
 
 export default function Create() {
   const { trigger } = useNotify();

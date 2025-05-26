@@ -108,7 +108,7 @@ export async function getUser(): Promise<UserData | null> {
 }
 
 
-export async function IncrementDaysActive() {
+export async function tryIncrementDaysActive() {
 	try {
 		const id = (await db.auth.getUser()).data.user?.id!;
 		const exists = await checkUserExists(id);
@@ -119,11 +119,15 @@ export async function IncrementDaysActive() {
 
 		if (!user) return false;
 
-		/// TODO: add a last signd in data to table later and check based of of that
+		const oldDate = (new Date(user.lastActive)).toISOString().split("T")[0];
+		const today = (new Date()).toISOString().split("T")[0]
 
-		// await db.from("Users").update({
-		// 	activeDays: user.activeDays + 1
-		// });
+		if (today != oldDate) {
+			await db.from("Users").update({
+				activeDays: user.activeDays + 1
+			}).eq("id", id);
+		}
+
 
 		return true;
 	} catch (error) {
