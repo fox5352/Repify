@@ -9,18 +9,13 @@ import { Button } from "@/components/ui/button";
 import Workout from "./components/Workout";
 import InputWithLabel from "./components/InputWithLabel";
 import { useNotify } from "@/ui/Notify";
+import { uploadWorkoutRoutine, type WorkoutRoutine, type WorkoutType } from "@/model/workoutroutine.model";
 
-type Workout = {
-  sets: number,
-  name: string,
-  reps?: number,
-  time?: number,
-  weight: number
-}
+
 
 interface WorkoutRotine {
   title: string;
-  workouts: Record<string, Workout>;
+  workouts: Record<string, WorkoutType>;
 };
 
 
@@ -88,7 +83,7 @@ export default function Create() {
     }))
   }
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     //TODO: leng of workouls listed about 0 and filter bad workds
     if (!isCleanText(workoutPlan.title)) {
@@ -109,6 +104,31 @@ export default function Create() {
         return;
       }
     }
+
+
+    const cleanedWorkoutRoutine: WorkoutRoutine = {
+      title: workoutPlan.title,
+      workouts: []
+    };
+
+    const data = Object.keys(workoutPlan.workouts).map(key => ({
+      ...workoutPlan.workouts[key],
+    }))
+      // @ts-ignore
+      .sort((a, b) => a.index - b.index);
+
+    cleanedWorkoutRoutine.workouts.push(...data)
+
+    const success = await uploadWorkoutRoutine(cleanedWorkoutRoutine)
+
+    if (!success) {
+      trigger("faild to upload workout routine", "error")
+      return
+    }
+
+    setWorkoutPlan({ title: "", workouts: {} });
+
+    // TODO: redirect to new upload
   }
 
   return (
@@ -118,13 +138,13 @@ export default function Create() {
           <legend className="text-2xl">Work out plain</legend>
 
           <div className="px-2 text-white rounded-lg bg-zinc-950">
-            <InputWithLabel label="Title" name="title" placeholder="Gains Bro" type="text" value={workoutPlan.title} onChange={handleInput} pattern="^[a-zA-Z0-9]{6,220}$" required={true} />
+            <InputWithLabel label="Title" name="title" placeholder="Gains Bro" type="text" value={workoutPlan.title} onChange={handleInput} />
           </div>
           <Divider />
 
           {
-            lengthOfWorkouts > 0 && Object.keys(workoutPlan.workouts).map(id => {
-              return <Workout key={id} id={id} update={handleChange} remove={() => { removeWorkout(id) }} />
+            lengthOfWorkouts > 0 && Object.keys(workoutPlan.workouts).map((id, index) => {
+              return <Workout key={id} id={id} update={handleChange} remove={() => { removeWorkout(id) }} index={index} />
             })
           }
           {

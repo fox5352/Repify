@@ -38,7 +38,7 @@ const notifyReducer = (state: NotifyState, action: { type: string, payload?: Not
 export function NotifyProvider({ children }: { children: ReactNode | string }) {
   const [state, dispatch] = useReducer(notifyReducer, {});
 
-  const trigger = (message: string, type?: NotifyType = "info") => {
+  const trigger = (message: string, type: NotifyType = "info") => {
     dispatch({
       type: "trigger",
       payload: { message, type }
