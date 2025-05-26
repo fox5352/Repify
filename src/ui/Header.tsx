@@ -1,7 +1,6 @@
-import React from "react";
 import type { ReactNode } from "react";
 
-import { SignedIn, SignedOut, SignInButton, SignOutButton } from "@clerk/clerk-react";
+import { SignedIn, SignedOut, SignInButton, SignOutButton } from "./SignIn";
 import { Link, useLocation } from "react-router";
 import Divider from "@/ui/Divider";
 import { genId } from "@/lib/utils";

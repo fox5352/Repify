@@ -1,9 +1,8 @@
 import { motion, useAnimation } from "motion/react"
-import { SignedIn, SignedOut, SignInButton, SignOutButton } from "@clerk/clerk-react";
+import { SignedIn, SignedOut, SignInButton, SignOutButton } from "@/ui/SignIn";
 
 import { House } from "lucide-react";
 import { useEffect, useState, type ReactNode } from "react";
-import { Button } from "@/components/ui/button";
 
 export default function AppBar({ links, mapper }: { links: { text: string, to: string }[], mapper: ({ text, to }: { text: string, to: string }, index: number) => ReactNode }) {
   // state
