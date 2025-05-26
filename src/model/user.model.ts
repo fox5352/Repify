@@ -124,7 +124,8 @@ export async function tryIncrementDaysActive() {
 
 		if (today != oldDate) {
 			await db.from("Users").update({
-				activeDays: user.activeDays + 1
+				activeDays: user.activeDays + 1,
+				lastActive: new Date()
 			}).eq("id", id);
 		}
 

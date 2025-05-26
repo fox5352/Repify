@@ -12,6 +12,10 @@ export default function Posts({ }: { id: string }) {
   const [posts, setPosts] = useState<Posts[]>([])
   const [isLoaded, setIsLoaded] = useState(false);
 
+  const filter = (id: string) => {
+    setPosts(_prev => posts.filter(post => post.id != id))
+  }
+
   useEffect(() => {
     const fetchPosts = async () => {
       try {
@@ -42,7 +46,7 @@ export default function Posts({ }: { id: string }) {
       }
       <div>
         {posts.length > 0 && posts.map((post) => {
-          return <WorkoutRoutineCard key={post.id} {...post} />
+          return <WorkoutRoutineCard key={post.id} {...post} filter={filter} />
         })}
       </div>
     </>
