@@ -101,7 +101,7 @@ export default function AppBar({ links, mapper }: { links: { text: string, to: s
     runSequence()
   }, [isMenuActive])
   return (
-    <div className="fixed right-0 bottom-4 md:hidden w-full py-4 px-2 flex flex-row-reverse" >
+    <div className="fixed z-50 right-0 bottom-4 md:hidden w-full py-4 px-2 flex flex-row-reverse" >
       <motion.button
         onClick={toggle}
         className="p-2 text-white bg-black border border-black"

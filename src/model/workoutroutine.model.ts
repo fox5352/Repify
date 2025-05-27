@@ -102,6 +102,36 @@ export async function getWorkoutRoutines(): Promise<getWorkoutRoutineType[] | nu
 	}
 }
 
+type Filter = "acs" | "dcs";
+
+export async function getAllWorkoutRoutines(page = 1, limit = 10, filter: Filter = "acs"): Promise<getWorkoutRoutineType[] | null> {
+	try {
+		const from = (page - 1) * limit;
+		const to = from + limit - 1;
+
+		const { data, error } = await db
+			.from("WorkoutRoutines")
+			.select(`*,WorkoutSets(*)`)
+			.order("created_at", { ascending: filter === "acs" })
+			.range(from, to);
+
+
+		if (!data || error) return [];
+
+		const formattedData: getWorkoutRoutineType[] = data.map((routine: { id: string, created_at: string, user_id: string, title: string, WorkoutSets: WorkoutType[] }) => {
+			const { WorkoutSets, ...rest } = routine;
+			return {
+				...rest,
+				workouts: WorkoutSets
+			};
+		});
+
+		return formattedData;
+	} catch (error) {
+		return null
+	}
+}
+
 export async function deleteWorkoutRoutine(id: string): Promise<boolean> {
 	try {
 		const user = await getUser();

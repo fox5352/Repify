@@ -3,10 +3,12 @@ import { createClient, type AuthChangeEvent, type OAuthResponse, type Session } 
 export const db = createClient(import.meta.env.VITE_SUPABASE_URL, import.meta.env.VITE_SUPABASE_ANON_KEY);
 
 
-export async function signIn(): Promise<OAuthResponse | null> {
+type Provider = "github" | "google"
+
+export async function signIn(provider: Provider = "github"): Promise<OAuthResponse | null> {
 	try {
 		return await db.auth.signInWithOAuth({
-			provider: "github",
+			provider: provider
 		});
 	} catch (error) {
 		console.error(`Failed to sign user in:${error}`)

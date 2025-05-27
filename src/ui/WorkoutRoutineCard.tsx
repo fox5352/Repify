@@ -99,7 +99,7 @@ export default function WorkoutRoutineCard({ id, user_id, title, workouts, class
       </CardContent>
       <CardAction className="w-full space-x-2 px-2 md:px-6">
         <Button size="icon" className="bg-white text-black dark:bg-zinc-950 dark:text-white" onClick={handleBoomark}>
-          <BookmarkIcon className={`text-amber-500 ${acn(isBookmarked, "bg-amber-500", "text-white")}`} />
+          <BookmarkIcon className={`text-amber-500 ${acn(isBookmarked, "bg-amber-500", "text-white", "rounded")}`} />
         </Button>
         {isOwnerViewing &&
           (<Button size="icon" className="bg-white text-black dark:bg-zinc-950 dark:text-white" onClick={handleDelete}>

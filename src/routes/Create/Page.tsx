@@ -130,8 +130,8 @@ export default function Create() {
 
   return (
     <section className="mt-4 rounded-md border-x-2 min-h-[460px] shadow-stone-500 shadow-lg">
-      <form className="min-h-[460px] p-4" onSubmit={handleSubmit}>
-        <fieldset className="flex flex-col gap-2 min-h-[460px]">
+      <form className="md:min-h-[460px] p-4" onSubmit={handleSubmit}>
+        <fieldset className="flex flex-col gap-2 md:min-h-[460px] max-w-[100%] overflow-hidden">
           <legend className="text-2xl">Work out plain</legend>
 
           <div className="px-2 text-white rounded-lg bg-zinc-950">

@@ -25,7 +25,7 @@ export default function InputWithLabel(
   }
 ) {
   return (
-    <div className="grid w-full max-w-sm items-center gap-1.5 my-2">
+    <div className="flex md:flex-col w-full max-w-sm items-center gap-1.5 my-2">
       <Label className={`text-xl ${cn(labelClassName)}`}>{label}:</Label>
       <Input
         id="title"
