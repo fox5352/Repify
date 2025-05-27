@@ -5,8 +5,8 @@ import { getWorkoutRoutineById, type getWorkoutRoutineType, type WorkoutType } f
 import Divider from "@/ui/Divider";
 import { useNotify } from "@/ui/Notify";
 import WorkoutTable from "@/ui/WorkoutTable";
-import { ArrowLeftIcon, PlayIcon } from "lucide-react";
-import { useEffect, useState } from "react"
+import { ArrowLeftIcon, Loader2, PlayIcon, SkullIcon } from "lucide-react";
+import { useEffect, useRef, useState } from "react"
 import { useNavigate, useLocation, useParams } from "react-router"
 
 export default function WorkoutsPage() {
@@ -21,6 +21,8 @@ export default function WorkoutsPage() {
   const [index, setIndex] = useState(0);
   const [tableRows, setTableRows] = useState<ArrayIterator<HTMLTableRowElement> | null>(null);
   const [workoutStarted, setWorkoutStarted] = useState(false);
+
+  const closeWorkout = () => setWorkoutStarted(false);
 
   const startWorkout = () => {
     const tableRows = document.querySelectorAll("tr");
@@ -94,7 +96,7 @@ export default function WorkoutsPage() {
             </div>
             {
               pageData && tableRows && (
-                <WorkoutCard isActive={workoutStarted} index={index} setIndex={setIndex} workout={pageData.workouts} tableRows={tableRows} />
+                <WorkoutCard isActive={workoutStarted} close={closeWorkout} index={index} setIndex={setIndex} workouts={pageData.workouts} tableRows={tableRows} />
               )
             }
           </>
@@ -106,22 +108,162 @@ export default function WorkoutsPage() {
 
 
 
-function WorkoutCard({ isActive, index, setIndex, workout, tableRows }: { isActive: boolean, index: number, setIndex: (index: number) => void, workout: WorkoutType[], tableRows: ArrayIterator<HTMLTableRowElement> }) {
+function WorkoutCard({ isActive, close, index, setIndex, workouts, tableRows }: { isActive: boolean, close: () => void, index: number, setIndex: (index: number) => void, workouts: WorkoutType[], tableRows: ArrayIterator<HTMLTableRowElement> }) {
+  const [currentExercise, setCurrentExercise] = useState("");
+  const [currentCountSets, setCurrenCountSets] = useState(0);
+  const rowRef = useRef<HTMLTableRowElement>(null);
 
+  const nextFunc = () => {
+    const count = currentCountSets;
+
+    if (count <= 1 && index + 1 < workouts.length) {
+      setIndex(index + 1);
+      return
+    }
+
+    if (count > 0) {
+      setCurrenCountSets(count - 1);
+    }
+
+    if (count == 0 && (index + 1) == workouts.length) {
+      setIndex(0);
+      close();
+    }
+  }
+
+  useEffect(() => {
+    if (index < workouts.length) {
+      setCurrentExercise(workouts[index].name);
+      setCurrenCountSets(workouts[index].sets);
+    }
+
+    if (index > workouts.length) {
+      setIndex(0);
+      close();
+    }
+
+    const row = tableRows.next().value;
+
+    if (rowRef.current) {
+      rowRef.current.classList.remove("bg-[var(--ac-color)]")
+    }
+
+    if (row) {
+      row.classList.add("bg-[var(--ac-color)]");
+      rowRef.current = row;
+    }
+  }, [index])
 
   return (
     <>{isActive && (
       <Card className="fixed z-30 top-1/2 left-1/2 -translate-1/2 w-sm">
         <CardHeader>
-          <CardTitle>Testing</CardTitle>
+          <div className="flex">
+            <CardTitle className="basis-full text-xl">{currentExercise}</CardTitle>
+            <Button size="icon" onClick={close} variant="destructive">
+              <SkullIcon />
+            </Button>
+          </div>
+          <Divider />
         </CardHeader>
-        <CardContent>
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Hic animi placeat deserunt fugit laboriosam, at, quibusdam aut accusantium consequatur, qui rerum? Veritatis asperiores fugit sapiente quisquam nesciunt minus obcaecati sequi!
+        <CardContent className="grid grid-cols-6">
+          <div className="col-start-2 col-span-4 text-2xl text-center font-semibold">
+            {currentCountSets} x Sets
+          </div>
+          {/* complex block */}
+          <Tracker workout={workouts[index]} />
+          {/**/}
+          {workouts[index].weight > 0 && (
+            <div className="col-start-2 col-span-4 text-2xl text-center font-semibold">
+              {workouts[index].weight} Kg
+            </div>
+          )}
+
         </CardContent>
-        <CardAction>
+        <CardAction className="w-full">
+          <div className="flex mx-8 px-2 flex-row-reverse">
+            <Button className="bg-[var(--ac-color)]" onClick={nextFunc}>
+              Next
+            </Button>
+          </div>
         </CardAction>
       </Card>
     )}
     </>
+  )
+}
+
+function Tracker({ workout }: { workout: WorkoutType }) {
+  const type = workout.reps != undefined ? "reps" : "time";
+  const starter = (workout.reps ? workout.reps : workout.time) || 0;
+  const [value, setValue] = useState(starter);
+
+  const [isCounterActive, setIsCounterActive] = useState(false)
+
+  const counter = () => {
+    let counter = value
+    setIsCounterActive(true);
+    const interval = setInterval(() => {
+      if (counter > 0) {
+        counter--
+        setValue(counter);
+      } else {
+        clearInterval(interval)
+        setIsCounterActive(false);
+        setValue(starter)
+      }
+    }, type == "reps" ? 250 : 1000)
+  }
+
+  const Timer = () => {
+    return (
+      <div className="min-h-30 relative">
+        <div className="absolute top-1/2 left-1/2 -translate-1/2 w-28 h-28 rounded-full bg-[var(--ac-color-two)]">
+          {/* TODO:: replace woth fluid animation of it draining */}
+        </div>
+        <div className="absolute top-1/2 left-1/2 -translate-1/2 flex flex-col justify-center text-center text-2xl font-bold">
+          {value}
+          <span>sec's</span>
+        </div>
+      </div>
+    )
+  }
+
+  const reps = () => {
+    // TODO: add a custom timer and then a active state
+    return (
+      <></>
+    )
+  }
+
+  return (
+    <div className="col-start-2 col-span-4 flex flex-col min-h-10 px-1.5 py-1 rounded space-y-1.5">
+      <div className="p-1">
+        {
+          type == "time" ?
+            <Timer />
+            :
+            <div className="flex text-center justify-center text-2xl">
+              {value} Reps
+            </div>
+        }
+      </div>
+      <Divider />
+      <div className="flex w-full justify-center">
+        <Button onClick={counter} disabled={isCounterActive}>
+          {
+            !isCounterActive ? (
+              <>
+                <PlayIcon /> Start
+              </>
+            ) : (
+              <>
+                <Loader2 className="animate-spin" />
+                active
+              </>
+            )}
+        </Button>
+      </div>
+    </div>
   )
 }
