@@ -31,7 +31,7 @@ export default function Footer({ mainRef }: { mainRef: RefObject<HTMLDivElement 
 
   return (
     <div className="h-40 mt-2">
-      <footer ref={footerRef} className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-4xl mx-auto border-t border-teal-500/20 dark:border-emerald-500/20 bg-white dark:bg-zinc-950 ">
+      <footer ref={footerRef} className="fixed z-20 bottom-0 left-1/2 -translate-x-1/2 w-full max-w-4xl mx-auto border-t border-teal-500/20 dark:border-emerald-500/20 bg-white dark:bg-zinc-950 ">
         <div className="px-6 pt-10 pb-4">
           <div className="flex flex-col md:flex-row justify-between items-center gap-6">
             {/* Copyright */}
