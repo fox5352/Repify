@@ -6,6 +6,7 @@ import ProtectedRoutes from './routes/ProtectedRoute'
 import Profile from './routes/Profile/Page'
 import Create from './routes/Create/Page'
 import Privacy from './routes/Privacy/Page'
+import WorkoutsPage from './routes/Workouts/Page'
 
 function App() {
 
@@ -22,6 +23,8 @@ function App() {
 
             <Route path='create' element={<Create />} />
           </Route>
+
+          <Route path="/workouts/:id" element={<WorkoutsPage />} />
 
           <Route path='/privacy' element={<Privacy />} />
           <Route path="*" element={<h2>Not Found</h2>} />

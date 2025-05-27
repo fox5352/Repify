@@ -1,21 +1,25 @@
 import { acn, cn } from "@/lib/utils";
-import { deleteWorkoutRoutine, type DatabaseMetaData, type WorkoutRoutine, type WorkoutType } from "../model/workoutroutine.model";
+import { deleteWorkoutRoutine, type DatabaseMetaData, type getWorkoutRoutineType, type WorkoutRoutine } from "../model/workoutroutine.model";
+
+import { useNavigate } from "react-router";
 
 import { Card, CardHeader, CardContent, CardTitle, CardAction } from "@/components/ui/card";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { useEffect, useState } from "react";
+import { useEffect, useState, type MouseEvent } from "react";
 import { BookmarkIcon, Trash2 } from "lucide-react";
 import { getUser } from "@/model/user.model";
 import { Button } from "@/components/ui/button";
 import { useNotify } from "./Notify";
 import { createBookMarker } from "@/model/bookmarker.model";
+import WorkoutTable from "./WorkoutTable";
 
 export default function WorkoutRoutineCard({ id, user_id, title, workouts, className, filter }: WorkoutRoutine & DatabaseMetaData & { className?: string, filter?: (id: string) => void }) {
   const { trigger } = useNotify();
+  const navigate = useNavigate();
   const [isOwnerViewing, setIsOwnerViewing] = useState(false);
   const [isBookmarked, setIsBookmarked] = useState(false);
 
-  const handleDelete = async () => {
+  const handleDelete = async (event: MouseEvent<HTMLButtonElement>) => {
+    event.stopPropagation();
     try {
       if (!isOwnerViewing) return;
 
@@ -28,7 +32,8 @@ export default function WorkoutRoutineCard({ id, user_id, title, workouts, class
     }
   }
 
-  const handleBoomark = async () => {
+  const handleBoomark = async (event: MouseEvent<HTMLButtonElement>) => {
+    event.stopPropagation();
     try {
       await createBookMarker(id);
 
@@ -37,6 +42,21 @@ export default function WorkoutRoutineCard({ id, user_id, title, workouts, class
       trigger("failed to bookmark post", "info");
       console.error(error);
     }
+  }
+
+  const ridirect = () => {
+    const data: getWorkoutRoutineType = {
+      id,
+      workouts,
+      created_at: "",
+      title,
+      user_id
+    }
+    navigate(`/workouts/${id}`, {
+      state: {
+        data
+      }
+    })
   }
 
   useEffect(() => {
@@ -52,50 +72,13 @@ export default function WorkoutRoutineCard({ id, user_id, title, workouts, class
     fetchData()
   }, [user_id])
 
-
-  const rowBuilder = (workout: WorkoutType, index?: number) => {
-    const { name, sets, reps, time, weight } = workout;
-    return (
-      <TableRow key={index}>
-        <TableCell>{name}</TableCell>
-        <TableCell>{sets}</TableCell>
-        <TableCell>{reps != undefined ? reps : null}</TableCell>
-        <TableCell>{time != undefined ? time : null}</TableCell>
-        <TableCell>{weight}kg</TableCell>
-      </TableRow>)
-  }
-
-
   return (
-    <Card className={`${cn(className)}`}>
+    <Card className={`${cn(className)} hover:cursor-pointer`} onClick={ridirect}>
       <CardHeader>
         <CardTitle>{title}</CardTitle>
       </CardHeader>
       <CardContent>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>
-                Exercise
-              </TableHead>
-              <TableHead>
-                Sets
-              </TableHead>
-              <TableHead>
-                Reps
-              </TableHead>
-              <TableHead>
-                Time
-              </TableHead>
-              <TableHead>
-                Weight
-              </TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {workouts.map((workout, index) => rowBuilder(workout, index))}
-          </TableBody>
-        </Table>
+        <WorkoutTable workouts={workouts} />
       </CardContent>
       <CardAction className="w-full space-x-2 px-2 md:px-6">
         <Button size="icon" className="bg-white text-black dark:bg-zinc-950 dark:text-white" onClick={handleBoomark}>

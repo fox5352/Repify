@@ -1,20 +1,18 @@
-import { getAllWorkoutRoutines, type SortFilter, type getWorkoutRoutineType } from "@/model/workoutroutine.model";
-import { useEffect, useMemo, useState } from "react"
+import { getAllWorkoutRoutines, type getWorkoutRoutineType } from "@/model/workoutroutine.model";
+import { useEffect, useState } from "react"
 import { useNotify } from "./Notify";
 import SkeletionBox from "@/components/ui/SkeletonBox";
 import WorkoutRoutineCard from "./WorkoutRoutineCard";
 import Pagination from "./Pagination";
-import { useSearchParams } from "react-router";
+import SearchControls, { useSearchControls } from "./SearchControls";
 
 export function Explore() {
   const { trigger } = useNotify();
+
   const [isLoaded, setIsLoaded] = useState(false);
   const [posts, setPosts] = useState<getWorkoutRoutineType[]>([]);
-  //
-  const [sortOrder, _setSortOrder] = useState<SortFilter>("acs");
-  const [searchParams, _serSearchParmas] = useSearchParams();
-  const [limit, _setLimit] = useState(10);
-  const page = useMemo(() => parseInt(searchParams.get("page") || "1", 10), [searchParams.get("page")])
+  // page datas management
+  const { sortOrder, page, limit } = useSearchControls();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -48,6 +46,7 @@ export function Explore() {
           </>
         )
       }
+      <SearchControls />
       {
         <div className="space-y-2.5">
           {posts.length > 0 && posts.map((post) => {
@@ -55,7 +54,7 @@ export function Explore() {
           })}
         </div>
       }
-      <Pagination limit={limit} />
+      <Pagination />
     </>
   )
 }

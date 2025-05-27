@@ -19,6 +19,10 @@ export interface WorkoutRoutine {
 	title: string, workouts: WorkoutType[]
 }
 
+export type getWorkoutRoutineType = WorkoutRoutine & DatabaseMetaData
+
+export type SortFilter = "acs" | "dcs";
+
 async function insertWorkoutSet(set: WorkoutType & { workout_routine_id: string }): Promise<boolean> {
 	try {
 		await db.from("WorkoutSets").insert({
@@ -66,25 +70,39 @@ export async function uploadWorkoutRoutine(workoutRoutine: WorkoutRoutine): Prom
 	}
 }
 
-
-
-export type getWorkoutRoutineType = WorkoutRoutine & DatabaseMetaData
-
-export async function getWorkoutRoutines(): Promise<getWorkoutRoutineType[] | null> {
+export async function getWorkoutRoutineById(id: string): Promise<getWorkoutRoutineType | null> {
 	try {
+		const { data, error } = await db.from("WorkoutRoutines").select(`*,WorkoutSets(*)`).eq("id", id).limit(1);
+
+		if (!data || error) return null;
+
+		const { WorkoutSets, ...rest } = data[0];
+
+		return {
+			...rest,
+			workouts: WorkoutSets
+		};
+	} catch (error) {
+		return null
+	}
+}
+
+
+export async function getWorkoutRoutines(page = 1, limit = 10, filter: SortFilter = "acs"): Promise<getWorkoutRoutineType[] | null> {
+	try {
+		const from = (page - 1) * limit;
+		const to = from + limit - 1;
+
 		const user = await getUser();
 
 		if (!user) return [] as getWorkoutRoutineType[];
 
-
 		const { data, error } = await db
 			.from("WorkoutRoutines")
-			.select(`
-    *,
-    WorkoutSets(*)
-  `)
-			.eq("user_id", user.id);
-
+			.select(`*,WorkoutSets(*)`)
+			.eq("user_id", user.id)
+			.order("created_at", { ascending: filter === "acs" })
+			.range(from, to);
 
 		if (!data || error) return [];
 
@@ -102,9 +120,8 @@ export async function getWorkoutRoutines(): Promise<getWorkoutRoutineType[] | nu
 	}
 }
 
-export type SortFilter = "acs" | "dcs";
 
-export async function getAllWorkoutRoutines(page = 1, limit = 10, filter: Filter = "acs"): Promise<getWorkoutRoutineType[] | null> {
+export async function getAllWorkoutRoutines(page = 1, limit = 10, filter: SortFilter = "acs"): Promise<getWorkoutRoutineType[] | null> {
 	try {
 		const from = (page - 1) * limit;
 		const to = from + limit - 1;

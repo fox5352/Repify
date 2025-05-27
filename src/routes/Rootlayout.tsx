@@ -6,6 +6,7 @@ import { useEffect, useRef } from "react";
 import { isAuthenticated } from "@/model/database";
 import { tryIncrementDaysActive } from "@/model/user.model";
 import Footer from "@/ui/Footer";
+import { SearchControlsProvider } from "@/ui/SearchControls";
 
 export default function Rootlayout() {
   const mainRef = useRef<HTMLDivElement>(null);
@@ -22,12 +23,14 @@ export default function Rootlayout() {
 
   return (
     <NotifyProvider>
-      <Header />
-      <main ref={mainRef} className="w-full max-w-4xl mx-auto">
-        <Outlet />
-      </main>
-      <Footer mainRef={mainRef} />
-      <Notify />
+      <SearchControlsProvider>
+        <Header />
+        <main ref={mainRef} className="w-full max-w-4xl mx-auto">
+          <Outlet />
+        </main>
+        <Footer mainRef={mainRef} />
+        <Notify />
+      </SearchControlsProvider>
     </NotifyProvider>
   )
 };

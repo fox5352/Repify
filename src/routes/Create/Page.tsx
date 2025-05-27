@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, type ChangeEvent, type FormEvent } from "react";
+import { useMemo, useState, type ChangeEvent, type FormEvent } from "react";
 import { Label } from "@radix-ui/react-label";
 
 import { isCleanText } from "@/lib/utils";
