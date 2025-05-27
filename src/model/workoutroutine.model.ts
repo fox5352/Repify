@@ -102,7 +102,7 @@ export async function getWorkoutRoutines(): Promise<getWorkoutRoutineType[] | nu
 	}
 }
 
-type Filter = "acs" | "dcs";
+export type SortFilter = "acs" | "dcs";
 
 export async function getAllWorkoutRoutines(page = 1, limit = 10, filter: Filter = "acs"): Promise<getWorkoutRoutineType[] | null> {
 	try {
@@ -150,5 +150,37 @@ export async function deleteWorkoutRoutine(id: string): Promise<boolean> {
 		return true;
 	} catch (error) {
 		return false;
+	}
+}
+
+export type CountFilter = "all" | "user";
+
+export async function getCountOfWorkoutRoutines(mode: CountFilter = "all"): Promise<number> {
+	try {
+		if (mode === "user") {
+			const user = await getUser();
+
+			if (!user) return -1;
+
+			const { data } = await db
+				.from("WorkoutRoutines")
+				.select("count", { count: "exact" })
+				.eq("user_id", user.id);
+
+
+			const count = data?.[0]?.count || -1;
+
+			return count
+		} else {
+			const { data } = await db
+				.from("WorkoutRoutines")
+				.select("count", { count: "exact" })
+
+			const count = data?.[0]?.count || -1;
+
+			return count
+		}
+	} catch (error) {
+		return -1;
 	}
 }
