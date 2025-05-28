@@ -8,6 +8,7 @@ import { tryIncrementDaysActive } from "@/model/user.model";
 import Footer from "@/ui/Footer";
 import { SearchControlsProvider } from "@/ui/SearchControls";
 import CookieConsentBanner from "@/ui/CookieBanner";
+import { ConsentCookieProvider } from "@/ui/LazyAdSenseLoader";
 
 export default function Rootlayout() {
   const mainRef = useRef<HTMLDivElement>(null);
@@ -23,16 +24,18 @@ export default function Rootlayout() {
   }, [])
 
   return (
-    <NotifyProvider>
-      <SearchControlsProvider>
-        <Header />
-        <main ref={mainRef} className="w-full max-w-4xl mx-auto">
-          <Outlet />
-        </main>
-        <Footer mainRef={mainRef} />
-        <Notify />
-        <CookieConsentBanner />
-      </SearchControlsProvider>
-    </NotifyProvider>
+    <ConsentCookieProvider>
+      <NotifyProvider>
+        <SearchControlsProvider>
+          <Header />
+          <main ref={mainRef} className="w-full max-w-4xl mx-auto">
+            <Outlet />
+          </main>
+          <Footer mainRef={mainRef} />
+          <Notify />
+          <CookieConsentBanner />
+        </SearchControlsProvider>
+      </NotifyProvider>
+    </ConsentCookieProvider>
   )
 };
