@@ -1,31 +1,17 @@
 import { useState, useEffect } from 'react';
 import { Cookie, AlertTriangle, ExternalLink } from 'lucide-react';
+import { useConsentCookie } from './LazyAdSenseLoader';
+
+
 
 export default function CookieConsentBanner() {
   const [showBanner, setShowBanner] = useState(false);
   const [isRedirecting, setIsRedirecting] = useState(false);
-
-  // Simple cookie functions (since js-cookie isn't available in this environment)
-  const setCookie = (name: string, value: string, days = 365) => {
-    const expires = new Date();
-    expires.setTime(expires.getTime() + (days * 24 * 60 * 60 * 1000));
-    document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/`;
-  };
-
-  const getCookie = (name: string) => {
-    const nameEQ = name + "=";
-    const ca = document.cookie.split(';');
-    for (let i = 0; i < ca.length; i++) {
-      let c = ca[i];
-      while (c.charAt(0) === ' ') c = c.substring(1, c.length);
-      if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
-    }
-    return null;
-  };
+  const { cookie, updateCookie } = useConsentCookie();
 
   useEffect(() => {
     // Check if user has already made a choice
-    const cookieConsent = getCookie('cookieConsent');
+    const cookieConsent = cookie;
 
     if (!cookieConsent || cookieConsent == "declined") {
       setShowBanner(true);
@@ -33,12 +19,12 @@ export default function CookieConsentBanner() {
   }, []);
 
   const handleAccept = () => {
-    setCookie('cookieConsent', 'accepted');
+    updateCookie('accepted');
     setShowBanner(false);
   };
 
   const handleDecline = () => {
-    setCookie('cookieConsent', 'declined');
+    updateCookie('declined');
     setIsRedirecting(true);
 
     // Show redirect message for 3 seconds, then redirect
@@ -76,6 +62,7 @@ export default function CookieConsentBanner() {
       <div className="fixed bottom-0 left-0 right-0 z-50 p-4">
         <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-2xl border border-zinc-200">
           <div className="p-6">
+
             {/* Header */}
             <div className="flex items-start justify-between mb-4">
               <div className="flex items-center gap-3">
@@ -117,6 +104,24 @@ export default function CookieConsentBanner() {
                   className="inline-flex items-center gap-1 text-teal-400 hover:text-emerald-500 transition-colors"
                 >
                   Ad Settings
+                  <ExternalLink className="w-3 h-3" />
+                </a>
+                <a
+                  href="https://support.google.com/admanager/answer/9012903" // GDPR info
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 text-teal-400 hover:text-emerald-500 transition-colors"
+                >
+                  GDPR Info
+                  <ExternalLink className="w-3 h-3" />
+                </a>
+                <a
+                  href="https://support.google.com/admanager/answer/9561024" // CCPA info
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 text-teal-400 hover:text-emerald-500 transition-colors"
+                >
+                  CCPA Info
                   <ExternalLink className="w-3 h-3" />
                 </a>
               </div>
