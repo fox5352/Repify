@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Cookie, AlertTriangle, ExternalLink } from 'lucide-react';
-import { useConsentCookie } from './LazyAdSenseLoader';
+import { useConsentCookie } from './AdLoader';
 
 
 

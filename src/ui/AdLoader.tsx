@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, type ReactNode } from "react";
+import { createContext, useContext, useEffect, useRef, useState, type ReactNode } from "react";
 import Cookies from 'js-cookie';
 import type { Value } from "@radix-ui/react-select";
 
@@ -85,13 +85,26 @@ export const useConsentCookie = () => {
   return ctx;
 }
 
-export default function() {
+interface AdSenseAdProps {
+  client: string;
+  slot: string;
+  format?: string;
+  responsive?: boolean;
+  layout?: string;
+  className?: string;
+}
+
+export default function({
+  client,
+  slot,
+  format = "auto",
+  responsive = true,
+  layout,
+  className = "",
+}: AdSenseAdProps) {
   const { auth } = useConsentCookie();
 
 
-  return (
-    <div>
-      Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempora aliquam repellat libero cumque, iure eos reiciendis accusamus. Facere architecto illo labore quia aspernatur soluta, assumenda, ducimus officiis ipsum dignissimos expedita.
-    </div>
-  )
+  return auth ? (<div></div>) : null;
+
 }

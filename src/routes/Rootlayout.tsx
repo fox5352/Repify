@@ -8,7 +8,7 @@ import { tryIncrementDaysActive } from "@/model/user.model";
 import Footer from "@/ui/Footer";
 import { SearchControlsProvider } from "@/ui/SearchControls";
 import CookieConsentBanner from "@/ui/CookieBanner";
-import { ConsentCookieProvider } from "@/ui/LazyAdSenseLoader";
+import { ConsentCookieProvider } from "@/ui/AdLoader";
 
 export default function Rootlayout() {
   const mainRef = useRef<HTMLDivElement>(null);
