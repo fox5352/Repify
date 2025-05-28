@@ -7,6 +7,7 @@ import { isAuthenticated } from "@/model/database";
 import { tryIncrementDaysActive } from "@/model/user.model";
 import Footer from "@/ui/Footer";
 import { SearchControlsProvider } from "@/ui/SearchControls";
+import CookieConsentBanner from "@/ui/CookieBanner";
 
 export default function Rootlayout() {
   const mainRef = useRef<HTMLDivElement>(null);
@@ -30,6 +31,7 @@ export default function Rootlayout() {
         </main>
         <Footer mainRef={mainRef} />
         <Notify />
+        <CookieConsentBanner />
       </SearchControlsProvider>
     </NotifyProvider>
   )
