@@ -43,6 +43,10 @@ async function insertWorkoutSet(set: WorkoutType & { workout_routine_id: string 
 
 export async function uploadWorkoutRoutine(workoutRoutine: WorkoutRoutine): Promise<boolean> {
 	try {
+		const amountOfExistingOnForuser = await getCountOfWorkoutRoutines("user");
+
+		if (amountOfExistingOnForuser > 10) return false;
+
 		const user = await getUser();
 
 		if (!user) return false;
