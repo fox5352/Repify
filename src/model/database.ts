@@ -20,7 +20,6 @@ export async function signIn(provider: Provider = "github"): Promise<OAuthRespon
 			provider: provider,
 			options: {
 				redirectTo,
-				flowType: "pkce"
 			}
 		});
 	} catch (error) {
