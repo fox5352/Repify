@@ -1,16 +1,26 @@
 import { createClient, type AuthChangeEvent, type OAuthResponse, type Session } from "@supabase/supabase-js";
 
-export const db = createClient(import.meta.env.VITE_SUPABASE_URL, import.meta.env.VITE_SUPABASE_ANON_KEY);
-
+export const db = createClient(
+	import.meta.env.VITE_SUPABASE_URL,
+	import.meta.env.VITE_SUPABASE_ANON_KEY,
+	{
+		auth: {
+			flowType: "pkce"
+		}
+	}
+);
 
 type Provider = "github" | "google"
 
 export async function signIn(provider: Provider = "github"): Promise<OAuthResponse | null> {
 	try {
+		const redirectTo = import.meta.env.VITE_REDIRECT_URL!;
+
 		return await db.auth.signInWithOAuth({
 			provider: provider,
 			options: {
-				redirectTo: import.meta.env.VITE_REDIRECT_URL!
+				redirectTo,
+				flowType: "pkce"
 			}
 		});
 	} catch (error) {
