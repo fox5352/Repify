@@ -229,12 +229,12 @@ function Tracker({ workout }: { workout: WorkoutType }) {
     )
   }
 
-  const reps = () => {
-    // TODO: add a custom timer and then a active state
-    return (
-      <></>
-    )
-  }
+  // const reps = () => {
+  //   // TODO: add a custom timer and then a active state
+  //   return (
+  //     <></>
+  //   )
+  // }
 
   return (
     <div className="col-start-2 col-span-4 flex flex-col min-h-10 px-1.5 py-1 rounded space-y-1.5">

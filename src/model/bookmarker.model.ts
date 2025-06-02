@@ -1,17 +1,17 @@
 import Dexie from "dexie";
-import type { WorkoutRoutine } from "./workoutroutine.model";
+import type { getWorkoutRoutineType } from "./workoutroutine.model";
 
 const db = new Dexie("bookmarkers");
 db.version(1).stores({ bookmarkers: "++id,_id,title" });
 
-export interface Bookmarker extends WorkoutRoutine {
+export interface Bookmarker extends getWorkoutRoutineType {
 	_id: string,
 	saved_at: string;
 }
 
 const bookmarkerTable = db.table<Bookmarker, number>("bookmarkers");
 
-export async function createBookMarker(data: WorkoutRoutine & { _id: string }): Promise<boolean> {
+export async function createBookMarker(data: getWorkoutRoutineType & { _id: string }): Promise<boolean> {
 	try {
 		const newBookmarker: Bookmarker = {
 			...data,
@@ -68,13 +68,13 @@ export async function bookmarkExists(id: string): Promise<boolean> {
 	}
 }
 
-export async function deleteBookmarker(id: string): Promise<boolean> {
+export async function deleteBookmarker(id: number): Promise<boolean> {
 	try {
 		await bookmarkerTable.delete(id);
 
 		return true;
 	} catch (error) {
-		console.error("failed to remove bookmarker :" + _id);
+		console.error("failed to remove bookmarker :" + id);
 		return false;
 	}
 }

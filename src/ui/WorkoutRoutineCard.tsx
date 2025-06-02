@@ -4,7 +4,7 @@ import { deleteWorkoutRoutine, type DatabaseMetaData, type getWorkoutRoutineType
 import { useNavigate } from "react-router";
 
 import { Card, CardHeader, CardContent, CardTitle, CardAction } from "@/components/ui/card";
-import { useEffect, useRef, useState, type MouseEvent } from "react";
+import { useEffect, useState, type MouseEvent } from "react";
 import { BookmarkIcon, Trash2 } from "lucide-react";
 import { getUser } from "@/model/user.model";
 import { Button } from "@/components/ui/button";
@@ -14,13 +14,12 @@ import WorkoutTable from "./WorkoutTable";
 
 export default function WorkoutRoutineCard({
   id, user_id,
-  title, workouts,
+  title, workouts, created_at,
   className, filter
 }:
   WorkoutRoutine & DatabaseMetaData &
   { className?: string, filter?: (id: string) => void }
 ) {
-  const cardRef = useRef<HTMLElement>(null)
   const { trigger } = useNotify();
   const navigate = useNavigate();
   const [isOwnerViewing, setIsOwnerViewing] = useState(false);
@@ -45,12 +44,13 @@ export default function WorkoutRoutineCard({
 
     if (!isBookmarked) {
       await createBookMarker({
-        _id: id, title, workouts
+        _id: id, title, workouts,
+        id: id, created_at, user_id
       });
 
       setIsBookmarked(true);
     } else {
-      await deleteBookmarker(id);
+      await deleteBookmarker(Number(id));
       setIsBookmarked(false);
     }
   }
@@ -91,7 +91,7 @@ export default function WorkoutRoutineCard({
   }, [user_id])
 
   return (
-    <Card ref={cardRef} className={`hover:cursor-pointer ${cn(className)}`} onClick={ridirect}>
+    <Card className={`hover:cursor-pointer ${cn(className)}`} onClick={ridirect}>
       <CardHeader>
         <CardTitle>{title}</CardTitle>
       </CardHeader>

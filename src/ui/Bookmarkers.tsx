@@ -37,8 +37,8 @@ export function Bookmarkers() {
         <LoadingState />
       }
       <div>
-        {bookmarkers.length > 0 && bookmarkers.map((post) => {
-          return <WorkoutRoutineCard key={post.id} {...post} />
+        {bookmarkers.length > 0 && bookmarkers.map((post, index) => {
+          return <WorkoutRoutineCard key={index} {...post} />
         })}
       </div>
     </>

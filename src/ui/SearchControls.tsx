@@ -1,6 +1,6 @@
 import { Menubar, MenubarContent, MenubarMenu, MenubarRadioGroup, MenubarRadioItem, MenubarTrigger } from "@/components/ui/menubar";
 import type { SortFilter } from "@/model/workoutroutine.model"
-import { ArrowDown, ArrowUp, Trash2 } from "lucide-react";
+import { ArrowDown, ArrowUp } from "lucide-react";
 import { createContext, useContext, useMemo, type ReactNode } from "react";
 import { useSearchParams } from "react-router";
 
