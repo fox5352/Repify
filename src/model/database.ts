@@ -8,7 +8,10 @@ type Provider = "github" | "google"
 export async function signIn(provider: Provider = "github"): Promise<OAuthResponse | null> {
 	try {
 		return await db.auth.signInWithOAuth({
-			provider: provider
+			provider: provider,
+			options: {
+				redirectTo: window.location.origin
+			}
 		});
 	} catch (error) {
 		console.error(`Failed to sign user in:${error}`)
