@@ -10,7 +10,7 @@ export async function signIn(provider: Provider = "github"): Promise<OAuthRespon
 		return await db.auth.signInWithOAuth({
 			provider: provider,
 			options: {
-				redirectTo: window.location.origin
+				redirectTo: import.meta.env.VITE_REDIRECT_URL!
 			}
 		});
 	} catch (error) {
