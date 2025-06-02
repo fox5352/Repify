@@ -7,10 +7,12 @@ type Provider = "github" | "google"
 
 export async function signIn(provider: Provider = "github"): Promise<OAuthResponse | null> {
 	try {
+		const redirectTo = import.meta.env.VITE_REDIRECT_URL!;
+		alert(redirectTo)
 		return await db.auth.signInWithOAuth({
 			provider: provider,
 			options: {
-				redirectTo: import.meta.env.VITE_REDIRECT_URL!
+				redirectTo
 			}
 		});
 	} catch (error) {
