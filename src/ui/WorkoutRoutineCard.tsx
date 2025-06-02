@@ -4,19 +4,27 @@ import { deleteWorkoutRoutine, type DatabaseMetaData, type getWorkoutRoutineType
 import { useNavigate } from "react-router";
 
 import { Card, CardHeader, CardContent, CardTitle, CardAction } from "@/components/ui/card";
-import { useEffect, useState, type MouseEvent } from "react";
+import { useEffect, useRef, useState, type MouseEvent } from "react";
 import { BookmarkIcon, Trash2 } from "lucide-react";
 import { getUser } from "@/model/user.model";
 import { Button } from "@/components/ui/button";
 import { useNotify } from "./Notify";
-import { createBookMarker } from "@/model/bookmarker.model";
+import { bookmarkExists, createBookMarker, deleteBookmarker } from "@/model/bookmarker.model";
 import WorkoutTable from "./WorkoutTable";
 
-export default function WorkoutRoutineCard({ id, user_id, title, workouts, className, filter }: WorkoutRoutine & DatabaseMetaData & { className?: string, filter?: (id: string) => void }) {
+export default function WorkoutRoutineCard({
+  id, user_id,
+  title, workouts,
+  className, filter
+}:
+  WorkoutRoutine & DatabaseMetaData &
+  { className?: string, filter?: (id: string) => void }
+) {
+  const cardRef = useRef<HTMLElement>(null)
   const { trigger } = useNotify();
   const navigate = useNavigate();
   const [isOwnerViewing, setIsOwnerViewing] = useState(false);
-  const [isBookmarked, setIsBookmarked] = useState(false);
+  const [isBookmarked, setIsBookmarked] = useState(true);
 
   const handleDelete = async (event: MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
@@ -34,13 +42,16 @@ export default function WorkoutRoutineCard({ id, user_id, title, workouts, class
 
   const handleBoomark = async (event: MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
-    try {
-      await createBookMarker(id);
+
+    if (!isBookmarked) {
+      await createBookMarker({
+        _id: id, title, workouts
+      });
 
       setIsBookmarked(true);
-    } catch (error) {
-      trigger("failed to bookmark post", "info");
-      console.error(error);
+    } else {
+      await deleteBookmarker(id);
+      setIsBookmarked(false);
     }
   }
 
@@ -69,11 +80,18 @@ export default function WorkoutRoutineCard({ id, user_id, title, workouts, class
       }
     };
 
+    const checkIsBookmarker = async () => {
+      const isBookmarker = await bookmarkExists(id);
+
+      setIsBookmarked(isBookmarker);
+    }
+
     fetchData()
+    checkIsBookmarker();
   }, [user_id])
 
   return (
-    <Card className={`${cn(className)} hover:cursor-pointer`} onClick={ridirect}>
+    <Card ref={cardRef} className={`hover:cursor-pointer ${cn(className)}`} onClick={ridirect}>
       <CardHeader>
         <CardTitle>{title}</CardTitle>
       </CardHeader>

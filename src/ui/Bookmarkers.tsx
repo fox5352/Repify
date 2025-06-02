@@ -1,13 +1,12 @@
 import { SkeletonCard } from "@/components/ui/skeletonCard";
-import { getBookmarkers } from "@/model/bookmarker.model";
-import type { getWorkoutRoutineType } from "@/model/workoutroutine.model";
+import { getBookmarkers, type Bookmarker } from "@/model/bookmarker.model";
 import { useNotify } from "@/ui/Notify";
 import WorkoutRoutineCard from "@/ui/WorkoutRoutineCard";
 import { useEffect, useState } from "react";
 
 export function Bookmarkers() {
   const { trigger } = useNotify();
-  const [bookmarkers, setBookMarkers] = useState<getWorkoutRoutineType[]>([]);
+  const [bookmarkers, setBookMarkers] = useState<Bookmarker[]>([]);
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
@@ -16,7 +15,6 @@ export function Bookmarkers() {
         setIsLoaded(false);
 
         const bookmarkers = await getBookmarkers();
-
         if (!bookmarkers) {
           throw new Error("falild to get bookmarkers")
         }
