@@ -3,8 +3,8 @@ import { getBookmarkers, type Bookmarker } from "@/model/bookmarker.model";
 import { useNotify } from "@/ui/Notify";
 import WorkoutRoutineCard from "@/ui/WorkoutRoutineCard";
 import { useEffect, useState } from "react";
-import { StateError } from "..";
 import { ErrorCard } from "./ErrorCard";
+import type { StateError } from "..";
 
 export function Bookmarkers() {
   const { trigger } = useNotify();

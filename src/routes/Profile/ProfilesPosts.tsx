@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react"
 
 import { getWorkoutRoutines, type DatabaseMetaData, type WorkoutRoutine } from "@/model/workoutroutine.model";
-import { useNotify } from "@/ui/Notify";
 import WorkoutRoutineCard from "@/ui/WorkoutRoutineCard";
 import Pagination from "@/ui/Pagination";
 import SearchControls, { useSearchControls } from "@/ui/SearchControls";
@@ -13,8 +12,6 @@ import type { StateError } from "@/index";
 type Posts = WorkoutRoutine & DatabaseMetaData;
 
 export default function Posts({ }: { id: string }) {
-  const { trigger } = useNotify();
-
   const [posts, setPosts] = useState<Posts[]>([])
   const [isLoaded, setIsLoaded] = useState(false);
   const [error, setError] = useState<StateError | null>(null);
