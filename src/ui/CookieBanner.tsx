@@ -69,7 +69,7 @@ export default function CookieConsentBanner() {
                 <Cookie className="w-6 h-6 text-teal-400 flex-shrink-0 mt-1" />
                 <div>
                   <h3 className="text-xl font-bold text-zinc-950">Cookie Consent Required</h3>
-                  <p className="text-sm text-zinc-600">This site requires ads to operate</p>
+                  <p className="text-sm text-zinc-600">This site uses cookies for authentication</p>
                 </div>
               </div>
             </div>
@@ -77,53 +77,13 @@ export default function CookieConsentBanner() {
             {/* Content */}
             <div className="mb-6 space-y-3">
               <p className="text-zinc-700 leading-relaxed">
-                This website uses cookies for authentication and displays ads through Google AdSense to keep the service free.
-                <strong className="text-zinc-950"> Accepting ads is required to use this site.</strong>
+                This website uses basic cookies to manage authentication and ensure the site functions properly.
               </p>
 
               <div className="bg-emerald-50 border border-emerald-200 rounded-md p-3">
                 <p className="text-emerald-800 text-sm font-medium">
-                  ⚠️ If you decline, you'll be redirected away from this site
+                  ⚠️ If you decline, you will not be able to use the site.
                 </p>
-              </div>
-
-              <div className="flex flex-wrap gap-4 text-sm">
-                <a
-                  href="https://policies.google.com/technologies/partner-sites"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1 text-teal-400 hover:text-emerald-500 transition-colors"
-                >
-                  Google's Data Usage
-                  <ExternalLink className="w-3 h-3" />
-                </a>
-                <a
-                  href="https://adssettings.google.com/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1 text-teal-400 hover:text-emerald-500 transition-colors"
-                >
-                  Ad Settings
-                  <ExternalLink className="w-3 h-3" />
-                </a>
-                <a
-                  href="https://support.google.com/admanager/answer/9012903" // GDPR info
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1 text-teal-400 hover:text-emerald-500 transition-colors"
-                >
-                  GDPR Info
-                  <ExternalLink className="w-3 h-3" />
-                </a>
-                <a
-                  href="https://support.google.com/admanager/answer/9561024" // CCPA info
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1 text-teal-400 hover:text-emerald-500 transition-colors"
-                >
-                  CCPA Info
-                  <ExternalLink className="w-3 h-3" />
-                </a>
               </div>
             </div>
 
@@ -133,7 +93,7 @@ export default function CookieConsentBanner() {
                 onClick={handleAccept}
                 className="flex-1 bg-emerald-500 hover:bg-emerald-600 text-white font-semibold py-3 px-6 rounded-md transition-colors duration-200"
               >
-                Accept Cookies & Ads
+                Accept Cookies
               </button>
               <button
                 onClick={handleDecline}
@@ -144,11 +104,10 @@ export default function CookieConsentBanner() {
             </div>
 
             <p className="text-xs text-zinc-500 mt-3 text-center">
-              By accepting, you agree to our use of cookies for authentication and advertising purposes.
+              By accepting, you agree to our use of cookies for authentication purposes only.
             </p>
           </div>
         </div>
       </div>
-    </>
-  );
+    </>);
 }

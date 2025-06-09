@@ -1,5 +1,6 @@
 import { Shield, Cookie, Globe, ExternalLink } from 'lucide-react';
 
+
 export default function Privacy() {
   return (
     <div className="min-h-screen bg-white">
@@ -30,71 +31,16 @@ export default function Privacy() {
           <div className="mb-12 bg-white border border-zinc-200 rounded-lg p-8 shadow-sm">
             <div className="flex items-center gap-3 mb-6">
               <Cookie className="w-6 h-6 text-emerald-500" />
-              <h2 className="text-2xl font-bold text-zinc-950">Authentication Cookies</h2>
+              <h2 className="text-2xl font-bold text-zinc-950">Authentication & Local Data</h2>
             </div>
             <div className="space-y-4 text-zinc-700">
               <p className="leading-relaxed">
-                We use Supabase for user authentication. When you log in, Supabase sets cookies to maintain
-                your session securely. These cookies are required for the app to function correctly and are
-                not used for tracking or advertising purposes.
+                We use a local database to store user information and basic cookies to manage authentication. These cookies are essential for keeping you logged in and ensuring the app works correctly. We do not use your data for tracking or advertising.
               </p>
               <div className="bg-emerald-50 border border-emerald-200 rounded-md p-4">
                 <p className="text-emerald-800 font-medium">
-                  ✓ Essential for app functionality only
+                  ✓ Minimal and essential data storage only
                 </p>
-              </div>
-            </div>
-          </div>
-
-          {/* Advertising Section */}
-          <div className="mb-12 bg-white border border-zinc-200 rounded-lg p-8 shadow-sm">
-            <div className="flex items-center gap-3 mb-6">
-              <Globe className="w-6 h-6 text-teal-400" />
-              <h2 className="text-2xl font-bold text-zinc-950">Advertising (Google AdSense)</h2>
-            </div>
-            <div className="space-y-6 text-zinc-700">
-              <p className="leading-relaxed">
-                This website displays ads through Google AdSense. Google and its partners may use cookies
-                to personalize ads based on your interests and previous browsing behavior.
-              </p>
-
-              <div className="space-y-4">
-                <div>
-                  <h3 className="font-semibold text-zinc-950 mb-2">Learn More About Google's Data Usage:</h3>
-                  <a
-                    href="https://policies.google.com/technologies/partner-sites"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 text-teal-400 hover:text-emerald-500 transition-colors font-medium"
-                  >
-                    Google's Privacy & Terms
-                    <ExternalLink className="w-4 h-4" />
-                  </a>
-                </div>
-
-                <div>
-                  <h3 className="font-semibold text-zinc-950 mb-3">Opt Out of Personalized Ads:</h3>
-                  <div className="space-y-2">
-                    <a
-                      href="https://adssettings.google.com/"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 text-teal-400 hover:text-emerald-500 transition-colors font-medium block"
-                    >
-                      Google Ads Settings
-                      <ExternalLink className="w-4 h-4" />
-                    </a>
-                    <a
-                      href="https://optout.aboutads.info/"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 text-teal-400 hover:text-emerald-500 transition-colors font-medium block"
-                    >
-                      AboutAds.info Choices
-                      <ExternalLink className="w-4 h-4" />
-                    </a>
-                  </div>
-                </div>
               </div>
             </div>
           </div>
