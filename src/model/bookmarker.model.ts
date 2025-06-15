@@ -5,13 +5,13 @@ const db = new Dexie("bookmarkers");
 db.version(1).stores({ bookmarkers: "++id,_id,title" });
 
 export interface Bookmarker extends getWorkoutRoutineType {
-	_id: string,
+	id: string,
 	saved_at: string;
 }
 
-const bookmarkerTable = db.table<Bookmarker, number>("bookmarkers");
+const bookmarkerTable = db.table<Bookmarker, string>("bookmarkers");
 
-export async function createBookMarker(data: getWorkoutRoutineType & { _id: string }): Promise<boolean> {
+export async function createBookMarker(data: getWorkoutRoutineType): Promise<boolean> {
 	try {
 		const newBookmarker: Bookmarker = {
 			...data,
@@ -42,15 +42,15 @@ export async function getBookmarkers(page: number = 1, limit: number = 10): Prom
 	}
 }
 
-export async function getBookmarkerById(_id: string): Promise<Bookmarker | null> {
+export async function getBookmarkerById(id: string): Promise<Bookmarker | null> {
 	try {
-		const result = await bookmarkerTable.where("_id").equals(_id).first();
+		const result = await bookmarkerTable.where("id").equals(id).first();
 
 		if (!result) return null;
 
 		return result
 	} catch (error) {
-		console.error("failed to get database :" + _id);
+		console.error("failed to get database :" + id);
 		return null;
 	}
 }
@@ -68,7 +68,7 @@ export async function bookmarkExists(id: string): Promise<boolean> {
 	}
 }
 
-export async function deleteBookmarker(id: number): Promise<boolean> {
+export async function deleteBookmarker(id: string): Promise<boolean> {
 	try {
 		await bookmarkerTable.delete(id);
 

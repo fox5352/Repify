@@ -57,7 +57,7 @@ export function Bookmarkers() {
               :
               <>
                 {bookmarkers.length > 0 && bookmarkers.map((post, index) => {
-                  return <WorkoutRoutineCard key={index} {...post} />
+                  return <WorkoutRoutineCard key={index} {...post} id={post.id} />
                 })}
               </>
         }
