@@ -44,13 +44,13 @@ export default function WorkoutRoutineCard({
 
     if (!isBookmarked) {
       await createBookMarker({
-        _id: id, title, workouts,
-        id: id, created_at, user_id
+        title, workouts,
+        id, created_at, user_id
       });
 
       setIsBookmarked(true);
     } else {
-      await deleteBookmarker(Number(id));
+      await deleteBookmarker(id);
       setIsBookmarked(false);
     }
   }
