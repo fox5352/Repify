@@ -1,43 +1,35 @@
 import path from "path";
 import tailwindcss from "@tailwindcss/vite";
-import react from '@vitejs/plugin-react-swc';
-import { VitePWA } from "vite-plugin-pwa";
-
+import react from "@vitejs/plugin-react";
 import { defineConfig } from 'vite';
+
+const host = process.env.TAURI_DEV_HOST;
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [react(), tailwindcss(), VitePWA({
-    registerType: "prompt",
-    includeAssets: ["favicon.svg", 'apple-touch-icon.png'],
-    manifest: {
-      name: "Replify",
-      short_name: "replify",
-      description: "A simple way to manage workout routines",
-      theme_color: "#0000",
-      icons: [
-        {
-          src: "web-app-manifest-192x192.png",
-          sizes: "192x192",
-          type: "image/png"
-        },
-        {
-          src: "web-app-manifest-512x512.png",
-          sizes: "512x512",
-          type: "image/png"
-        },
-        {
-          src: "web-app-manifest-512x512.png",
-          sizes: "512x512",
-          type: "image/png",
-          purpose: "any maskable"
-        },
-      ],
-    }
-  })],
+  plugins: [react(), tailwindcss()],
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src")
     }
-  }
+  },
+  // 1. prevent vite from obscuring rust errors
+  clearScreen: false,
+  // 2. tauri expects a fixed port, fail if that port is not available
+  server: {
+    port: 1420,
+    strictPort: true,
+    host: host || false,
+    hmr: host
+      ? {
+        protocol: "ws",
+        host,
+        port: 1421,
+      }
+      : undefined,
+    watch: {
+      // 3. tell vite to ignore watching `src-tauri`
+      ignored: ["**/src-tauri/**"],
+    },
+  },
 })

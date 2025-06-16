@@ -12,7 +12,8 @@ export function Header() {
   const links: { text: string, to: string, desc: string }[] = [
     { text: "Feed", to: "/", desc: "home page with feed of others posts" },
     { text: "Create", to: "/auth/create", desc: "create new post or workout routine" },
-    { text: "Profile", to: "/auth/user", desc: "Users profile page read stats and more" }
+    { text: "Profile", to: "/auth/user", desc: "Users profile page read stats and more" },
+    { text: "Settings", to: "/settings", desc: "Settings for your app" }
   ]
 
   const mapper = ({ text, to }: { text: string, to: string }, index: number): ReactNode => {
