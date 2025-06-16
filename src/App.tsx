@@ -7,6 +7,7 @@ import Profile from './routes/Profile/Page'
 import Create from './routes/Create/Page'
 import Privacy from './routes/Privacy/Page'
 import WorkoutsPage from './routes/Workouts/Page'
+import Settings from './routes/Settings/Page'
 
 function App() {
 
@@ -16,6 +17,7 @@ function App() {
         <Route element={<Rootlayout />}>
           <Route index element={<Home />} />
 
+          <Route path="/settings" element={<Settings />} />
           <Route path="auth" element={<ProtectedRoutes />}>
             <Route path='user' element={<Profile />} />
 
