@@ -9,6 +9,7 @@ import Footer from "@/ui/Footer";
 import { SearchControlsProvider } from "@/ui/SearchControls";
 import CookieConsentBanner from "@/ui/CookieBanner";
 import { ConsentCookieProvider } from "@/ui/AdLoader";
+import UpdateChecker from "@/ui/UpdateChecker";
 
 export default function Rootlayout() {
   const mainRef = useRef<HTMLDivElement>(null);
@@ -34,7 +35,8 @@ export default function Rootlayout() {
           </main>
           <Footer mainRef={mainRef} />
           <Notify />
-          <CookieConsentBanner />
+          <UpdateChecker />
+          {/* <CookieConsentBanner /> */}
         </SearchControlsProvider>
       </NotifyProvider>
     </ConsentCookieProvider>
