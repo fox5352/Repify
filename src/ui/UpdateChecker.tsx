@@ -16,7 +16,7 @@ export default function() {
 
       if (!res.ok) return;
 
-      const currentVersion = await getVersion();
+      const currentVersion = (await getVersion()).split(".").map(Number);
 
       const data: {
         body: string;
@@ -25,14 +25,16 @@ export default function() {
         html_url: string;
       } = await res.json();
 
+      let dataVersion = data.tag_name.split("v")[1].split(".").map(Number);
+
       // Simple semver comparison
       if (
-        data.tag_name[1] > currentVersion[1] ||
-        data.tag_name[3] > currentVersion[3] ||
-        data.tag_name[5] > currentVersion[5]
+        dataVersion[1] > currentVersion[1] ||
+        dataVersion[3] > currentVersion[3] ||
+        dataVersion[5] > currentVersion[5]
       ) {
         await notification({
-          title: `New update ${data.name}`,
+          title: `New update ${data.name}:${data.tag_name} available`,
           body: `${data.name}`,
         });
       }
