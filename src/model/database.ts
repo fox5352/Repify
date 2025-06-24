@@ -10,7 +10,7 @@ export const db = createClient(
 	}
 );
 
-type Provider = "github" | "google"
+type Provider = "github"
 
 export async function signIn(provider: Provider = "github"): Promise<OAuthResponse | null> {
 	try {
@@ -25,6 +25,22 @@ export async function signIn(provider: Provider = "github"): Promise<OAuthRespon
 		console.error(`Failed to sign user in:${error}`)
 		return null;
 	}
+}
+
+export async function signUpWithEmail(email: string, password: string) {
+	return await db.auth.signUp({
+		email,
+		password,
+		options: {
+			emailRedirectTo: window.location.origin
+		}
+	});
+}
+
+export async function signInWithEmail(email: string, password: string) {
+	return await db.auth.signInWithPassword({
+		email, password,
+	})
 }
 
 export async function signOut() {
