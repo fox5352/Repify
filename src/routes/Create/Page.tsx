@@ -1,4 +1,4 @@
-import { useMemo, useState, type ChangeEvent, type FormEvent } from "react";
+import { useEffect, useMemo, useState, type ChangeEvent, type FormEvent } from "react";
 import { Label } from "@radix-ui/react-label";
 
 import { isCleanText } from "@/lib/utils";
@@ -9,15 +9,18 @@ import { Button } from "@/components/ui/button";
 import Workout from "./components/Workout";
 import InputWithLabel from "./components/InputWithLabel";
 import { useNotify } from "@/ui/Notify";
-import { uploadWorkoutRoutine, type WorkoutRoutine, type WorkoutType } from "@/model/workoutroutine.model";
+import { updateWorkoutRoutine, uploadWorkoutRoutine, type WorkoutRoutine, type WorkoutType } from "@/model/workoutroutine.model";
+import { useLocation } from "react-router";
 
 interface WorkoutRotine {
+  id?: string;
   title: string;
   workouts: Record<string, WorkoutType>;
 };
 
 export default function Create() {
   const { trigger } = useNotify();
+  const { state, search } = useLocation();
   const [workoutPlan, setWorkoutPlan] = useState<WorkoutRotine>({ title: "", workouts: {} });
 
   const lengthOfWorkouts = useMemo(() =>
@@ -81,6 +84,8 @@ export default function Create() {
   }
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    let params = new URLSearchParams(search);
+
     event.preventDefault();
     //TODO: leng of workouls listed about 0 and filter bad workds
     if (!isCleanText(workoutPlan.title)) {
@@ -102,7 +107,6 @@ export default function Create() {
       }
     }
 
-
     const cleanedWorkoutRoutine: WorkoutRoutine = {
       title: workoutPlan.title,
       workouts: []
@@ -116,7 +120,13 @@ export default function Create() {
 
     cleanedWorkoutRoutine.workouts.push(...data)
 
-    const success = await uploadWorkoutRoutine(cleanedWorkoutRoutine)
+    let success: boolean = false;
+
+    if (params.has("update") && workoutPlan.id) {
+      success = await updateWorkoutRoutine(workoutPlan.id, cleanedWorkoutRoutine);
+    } else {
+      success = await uploadWorkoutRoutine(cleanedWorkoutRoutine)
+    }
 
     if (!success) {
       trigger("faild to upload workout routine", "error")
@@ -127,6 +137,26 @@ export default function Create() {
 
     // TODO: redirect to new upload
   }
+
+  useEffect(() => {
+    let params = new URLSearchParams(search);
+    let data = state as WorkoutRoutine & { id: string };
+    if (params.has("update") && data != null) {
+      const workout = {
+        id: data.id,
+        title: data.title,
+        workouts: data.workouts.reduce((prev, curr, index) => {
+          return {
+            ...prev,
+            [index]: curr
+          }
+        }, {})
+      };
+
+      setWorkoutPlan(workout);
+    }
+  }, [search])
+
 
   return (
     <section className="mt-4 rounded-md border-x-2 min-h-[460px] shadow-stone-500 shadow-lg">

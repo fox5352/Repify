@@ -23,12 +23,12 @@ export type getWorkoutRoutineType = WorkoutRoutine & DatabaseMetaData
 
 export type SortFilter = "acs" | "dcs";
 
-/** 
+/**
  * Inserts a workout set into the database.
  * @param set - The workout set to insert, including the workout routine ID.
  * @returns A promise that resolves to true if the insertion was successful, false otherwise.
 */
-async function insertWorkoutSet(set: WorkoutType &  { workout_routine_id: string }): Promise<boolean> {
+async function insertWorkoutSet(set: WorkoutType & { workout_routine_id: string }): Promise<boolean> {
 	try {
 		await db.from("WorkoutSets").insert({
 			workout_routine_id: set.workout_routine_id,
@@ -46,16 +46,16 @@ async function insertWorkoutSet(set: WorkoutType &  { workout_routine_id: string
 	}
 }
 
-async function updateWorkoutSet(id:string, index: number, set: WorkoutType & { workout_routine_id:string}): Promise<boolean> {
+async function updateWorkoutSet(id: string, index: number, set: WorkoutType & { workout_routine_id: string }): Promise<boolean> {
 	try {
-		let {error} = await db.from("WorkoutSets").update({...set}).eq("workout_routine_id", id).eq("index", index)
+		let { error } = await db.from("WorkoutSets").update({ ...set }).eq("workout_routine_id", id).eq("index", index)
 
 		if (error) throw new Error(error.message);
 
 		return false;
 	} catch (error) {
 		console.error(error);
-		return false;		
+		return false;
 	}
 }
 
@@ -208,18 +208,18 @@ export async function updateWorkoutRoutine(id: string, workoutRoutine: WorkoutRo
 
 		if (!user) return false;
 
-		let {error} = await db.from("WorkoutRoutines").update({title: workoutRoutine.title}).eq("id",id);
+		let { error } = await db.from("WorkoutRoutines").update({ title: workoutRoutine.title }).eq("id", id);
 
 		if (error) throw new Error(error.message);
 
 		await Promise.all(workoutRoutine.workouts.map((set) => {
 			return updateWorkoutSet(id, set.index!, { ...set, workout_routine_id: id });
-		}))				
+		}))
 
 		return true;
 	} catch (error) {
 		console.error(error);
-		return false;	
+		return false;
 	}
 }
 
