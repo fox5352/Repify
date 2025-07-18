@@ -23,7 +23,12 @@ export type getWorkoutRoutineType = WorkoutRoutine & DatabaseMetaData
 
 export type SortFilter = "acs" | "dcs";
 
-async function insertWorkoutSet(set: WorkoutType & { workout_routine_id: string }): Promise<boolean> {
+/** 
+ * Inserts a workout set into the database.
+ * @param set - The workout set to insert, including the workout routine ID.
+ * @returns A promise that resolves to true if the insertion was successful, false otherwise.
+*/
+async function insertWorkoutSet(set: WorkoutType &  { workout_routine_id: string }): Promise<boolean> {
 	try {
 		await db.from("WorkoutSets").insert({
 			workout_routine_id: set.workout_routine_id,
@@ -41,6 +46,24 @@ async function insertWorkoutSet(set: WorkoutType & { workout_routine_id: string 
 	}
 }
 
+async function updateWorkoutSet(id:string, index: number, set: WorkoutType & { workout_routine_id:string}): Promise<boolean> {
+	try {
+		let {error} = await db.from("WorkoutSets").update({...set}).eq("workout_routine_id", id).eq("index", index)
+
+		if (error) throw new Error(error.message);
+
+		return false;
+	} catch (error) {
+		console.error(error);
+		return false;		
+	}
+}
+
+/**
+ * Uploads a workout routine to the database.
+ * @param workoutRoutine - The workout routine to upload, including title and workouts.
+ * @returns A promise that resolves to true if the upload was successful, false otherwise.
+ */
 export async function uploadWorkoutRoutine(workoutRoutine: WorkoutRoutine): Promise<boolean> {
 	try {
 		const amountOfExistingOnForuser = await getCountOfWorkoutRoutines("user");
@@ -74,6 +97,12 @@ export async function uploadWorkoutRoutine(workoutRoutine: WorkoutRoutine): Prom
 	}
 }
 
+/**
+ * Retrieves a workout routine by its ID.
+ * @param id - The ID of the workout routine to retrieve.
+ * @description Retrieves a workout routine by its ID, including its sets.
+ * @returns A promise that resolves to the workout routine if found, or null if not found or an error occurs.
+ */
 export async function getWorkoutRoutineById(id: string): Promise<getWorkoutRoutineType | null> {
 	try {
 		const { data, error } = await db.from("WorkoutRoutines").select(`*,WorkoutSets(*)`).eq("id", id).limit(1);
@@ -91,7 +120,14 @@ export async function getWorkoutRoutineById(id: string): Promise<getWorkoutRouti
 	}
 }
 
-
+/**
+ * Retrieves workout routines with pagination and sorting.
+ * @param page The page number for pagination, default is 1.
+ * @param limit The number of routines per page, default is 10.
+ * @param filter The sorting order, either "acs" for ascending or "dcs" for descending, default is "acs".
+ * @description Retrieves workout routines with pagination and sorting options
+ * @returns A promise that resolves to an array of workout routines or an empty array if none are found.
+ */
 export async function getWorkoutRoutines(page = 1, limit = 10, filter: SortFilter = "acs"): Promise<getWorkoutRoutineType[] | null> {
 	try {
 		const from = (page - 1) * limit;
@@ -124,7 +160,14 @@ export async function getWorkoutRoutines(page = 1, limit = 10, filter: SortFilte
 	}
 }
 
-
+/**
+ * Retrieves all workout routines with pagination and sorting.
+ * @param page The page number for pagination, default is 1.
+ * @param limit The number of routines per page, default is 10.
+ * @param filter The sorting order, either "acs" for ascending or "dcs" for descending, default is "acs".
+ * @description Retrieves all workout routines with pagination and sorting options.
+ * @returns A promise that resolves to an array of workout routines or an empty array if none are found.
+ */
 export async function getAllWorkoutRoutines(page = 1, limit = 10, filter: SortFilter = "acs"): Promise<getWorkoutRoutineType[] | null> {
 	try {
 		const from = (page - 1) * limit;
@@ -153,6 +196,39 @@ export async function getAllWorkoutRoutines(page = 1, limit = 10, filter: SortFi
 	}
 }
 
+/**
+ * Updates WorkoutRoutine
+ * @param id The id of the Routine you want to update
+ * @param workoutRoutine The new Data to update to
+ * @returns A promise that resolves to a boolean true if opataion worked
+ */
+export async function updateWorkoutRoutine(id: string, workoutRoutine: WorkoutRoutine): Promise<boolean> {
+	try {
+		const user = await getUser();
+
+		if (!user) return false;
+
+		let {error} = await db.from("WorkoutRoutines").update({title: workoutRoutine.title}).eq("id",id);
+
+		if (error) throw new Error(error.message);
+
+		await Promise.all(workoutRoutine.workouts.map((set) => {
+			return updateWorkoutSet(id, set.index!, { ...set, workout_routine_id: id });
+		}))				
+
+		return true;
+	} catch (error) {
+		console.error(error);
+		return false;	
+	}
+}
+
+/**
+ * Deletes a workout routine by its ID.
+ * @param id - The ID of the workout routine to delete.
+ * @description Deletes a workout routine by its ID, including all associated sets.
+ * @returns A promise that resolves to true if the deletion was successful, false otherwise.
+ */
 export async function deleteWorkoutRoutine(id: string): Promise<boolean> {
 	try {
 		const user = await getUser();
@@ -176,6 +252,11 @@ export async function deleteWorkoutRoutine(id: string): Promise<boolean> {
 
 export type CountFilter = "all" | "user";
 
+/**
+ * Retrieves the count of workout routines.
+ * @param mode - The mode for counting routines, either "all" for all routines or "user" for routines of the current user.
+ * @returns A promise that resolves to the count of workout routines, or -1 if an error occurs.
+ */
 export async function getCountOfWorkoutRoutines(mode: CountFilter = "all"): Promise<number> {
 	try {
 		if (mode === "user") {
