@@ -5,7 +5,26 @@ import { Input } from "@/components/ui/input";
 import { ArrowUpDown, Trash } from "lucide-react";
 import { Label } from "@/components/ui/label";
 
-export default function Workout({ index, id, update, remove }: { index: number, id: string, update: (id: string, name: string, value: any) => void, remove: () => void }) {
+export default function Workout({
+  index,
+  id,
+  data,
+  update,
+  remove
+}: {
+  index: number,
+  data?: {
+    name: string,
+    sets: number,
+    time?: number,
+    reps?: number
+    weight: number
+  }
+  id: string,
+  update: (id: string, name: string, value: any) => void,
+  remove: () => void
+}) {
+
   const typeRef = useRef<HTMLInputElement>(null)
   const [type, setType] = useState<"reps" | "time">("reps");
 
@@ -13,6 +32,7 @@ export default function Workout({ index, id, update, remove }: { index: number, 
     update(id, "index", index);
     update(id, event.target.name, event.target.value);
   }
+
   const toggleType = () => {
     if (typeRef.current == null) return;
 
@@ -29,12 +49,12 @@ export default function Workout({ index, id, update, remove }: { index: number, 
       {/* name */}
       <div className="flex gap-1.5">
         <Label className="text-lg">Name</Label>
-        <Input id={`${id}-name`} className="text-white valid:border-emerald-500" placeholder="name" type="text" name="name" onChange={changeHandler} pattern="^[a-zA-Z0-9\s]{3,40}$" required />
+        <Input id={`${id}-name`} className="text-white valid:border-emerald-500" placeholder="name" type="text" name="name" value={data?.name || ""} onChange={changeHandler} pattern="^[a-zA-Z0-9\s]{3,40}$" required />
       </div>
       {/* sets */}
       <div className="flex gap-1.5">
         <Label className="text-lg">Sets</Label>
-        <Input className="text-white valid:border-emerald-500" placeholder="sets" type="number" name="sets" onChange={changeHandler} min={1} max={50} pattern="^[0-9]{1,2}$" required />
+        <Input className="text-white valid:border-emerald-500" placeholder="sets" type="number" name="sets" value={data?.sets || 0} onChange={changeHandler} min={1} max={50} pattern="^[0-9]{1,2}$" required />
       </div>
       {/* reps or time */}
       <div className="col-span-2 sm:col-span-1 flex gap-1.5">
@@ -42,12 +62,12 @@ export default function Workout({ index, id, update, remove }: { index: number, 
           <ArrowUpDown />
         </Button>
         <Label className="text-lg">{type == "time" ? "Time" : "Reps"}</Label>
-        <Input ref={typeRef} className="text-white valid:border-emerald-500" placeholder={type == "reps" ? "reps" : "duration"} type="number" name={type == "reps" ? "reps" : "time"} onChange={changeHandler} min={0} max={300} pattern="^[0-9]{1,3}$" required />
+        <Input ref={typeRef} className="text-white valid:border-emerald-500" placeholder={type == "reps" ? "reps" : "duration"} type="number" name={type == "reps" ? "reps" : "time"} value={type == "time" ? data?.time : data?.reps} onChange={changeHandler} min={0} max={300} pattern="^[0-9]{1,3}$" required />
       </div>
       {/* weight*/}
       <div className="col-span-2 sm:col-span-1 flex gap-1.5">
         <Label className="text-lg">Weight</Label>
-        <Input className="w-full text-white valid:border-emerald-500" placeholder="weight in kg" type="number" name="weight" onChange={changeHandler} min={0} max={900} pattern="^[0-9]{1,3}$" required />
+        <Input className="w-full text-white valid:border-emerald-500" placeholder="weight in kg" type="number" name="weight" value={data?.weight} onChange={changeHandler} min={0} max={900} pattern="^[0-9]{1,3}$" required />
       </div>
       <Button className="" style={{
         backgroundColor: "var(--error-color)"

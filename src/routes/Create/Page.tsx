@@ -10,7 +10,7 @@ import Workout from "./components/Workout";
 import InputWithLabel from "./components/InputWithLabel";
 import { useNotify } from "@/ui/Notify";
 import { updateWorkoutRoutine, uploadWorkoutRoutine, type WorkoutRoutine, type WorkoutType } from "@/model/workoutroutine.model";
-import { useLocation } from "react-router";
+import { redirect, useLocation } from "react-router";
 
 interface WorkoutRotine {
   id?: string;
@@ -19,6 +19,8 @@ interface WorkoutRotine {
 };
 
 export default function Create() {
+  // page state
+  const [mode, setMode] = useState<"create" | "update">("create");
   const { trigger } = useNotify();
   const { state, search } = useLocation();
   const [workoutPlan, setWorkoutPlan] = useState<WorkoutRotine>({ title: "", workouts: {} });
@@ -84,9 +86,8 @@ export default function Create() {
   }
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    let params = new URLSearchParams(search);
-
     event.preventDefault();
+
     //TODO: leng of workouls listed about 0 and filter bad workds
     if (!isCleanText(workoutPlan.title)) {
       trigger("Title has works thats not allowed", "error");
@@ -122,7 +123,7 @@ export default function Create() {
 
     let success: boolean = false;
 
-    if (params.has("update") && workoutPlan.id) {
+    if (mode == "update" && workoutPlan.id) {
       success = await updateWorkoutRoutine(workoutPlan.id, cleanedWorkoutRoutine);
     } else {
       success = await uploadWorkoutRoutine(cleanedWorkoutRoutine)
@@ -132,16 +133,18 @@ export default function Create() {
       trigger("faild to upload workout routine", "error")
       return
     }
-
     setWorkoutPlan({ title: "", workouts: {} });
 
     // TODO: redirect to new upload
+    redirect("/");
   }
 
   useEffect(() => {
     let params = new URLSearchParams(search);
+
     let data = state as WorkoutRoutine & { id: string };
     if (params.has("update") && data != null) {
+      setMode("update");
       const workout = {
         id: data.id,
         title: data.title,
@@ -154,7 +157,10 @@ export default function Create() {
       };
 
       setWorkoutPlan(workout);
+    } else {
+      setMode("create")
     }
+
   }, [search])
 
 
@@ -171,7 +177,13 @@ export default function Create() {
 
           {
             lengthOfWorkouts > 0 && Object.keys(workoutPlan.workouts).map((id, index) => {
-              return <Workout key={id} id={id} update={handleChange} remove={() => { removeWorkout(id) }} index={index} />
+              return <Workout key={id} id={id} update={handleChange} remove={() => { removeWorkout(id) }} index={index} data={mode == "update" ? {
+                weight: workoutPlan.workouts[id].weight,
+                name: workoutPlan.workouts[id].name,
+                reps: workoutPlan.workouts[id].reps,
+                sets: workoutPlan.workouts[id].sets,
+                time: workoutPlan.workouts[id].time
+              } : undefined} />
             })
           }
           {

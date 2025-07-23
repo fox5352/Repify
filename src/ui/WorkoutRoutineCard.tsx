@@ -1,11 +1,11 @@
 import { acn, cn } from "@/lib/utils";
-import { deleteWorkoutRoutine, type DatabaseMetaData, type getWorkoutRoutineType, type WorkoutRoutine } from "../model/workoutroutine.model";
+import { deleteWorkoutRoutine, getWorkoutRoutineById, type DatabaseMetaData, type getWorkoutRoutineType, type WorkoutRoutine } from "../model/workoutroutine.model";
 
 import { useNavigate } from "react-router";
 
 import { Card, CardHeader, CardContent, CardTitle, CardAction } from "@/components/ui/card";
 import { useEffect, useState, type MouseEvent } from "react";
-import { BookmarkIcon, Trash2 } from "lucide-react";
+import { BookmarkIcon, Trash2, EditIcon } from "lucide-react";
 import { getUser } from "@/model/user.model";
 import { Button } from "@/components/ui/button";
 import { useNotify } from "./Notify";
@@ -52,6 +52,19 @@ export default function WorkoutRoutineCard({
     } else {
       await deleteBookmarker(id);
       setIsBookmarked(false);
+    }
+  }
+
+
+  const handleEditClick = async (event: MouseEvent<HTMLButtonElement>) => {
+    event.stopPropagation();
+
+    let workoutData: getWorkoutRoutineType | null = await getWorkoutRoutineById(id);
+
+    if (workoutData) {
+      navigate("/auth/create?update=true", {
+        state: { ...workoutData }
+      })
     }
   }
 
@@ -103,9 +116,14 @@ export default function WorkoutRoutineCard({
           <BookmarkIcon className={`text-amber-500 ${acn(isBookmarked, "bg-amber-500", "text-white", "rounded")}`} />
         </Button>
         {isOwnerViewing &&
-          (<Button size="icon" className="bg-white text-black dark:bg-zinc-950 dark:text-white" onClick={handleDelete}>
-            <Trash2 className="text-rose-600" />
-          </Button>)
+          (<>
+            <Button size="icon" className="bg-white text-black dark:bg-zinc-950 dark:text-white" onClick={handleDelete}>
+              <Trash2 className="text-rose-600" />
+            </Button>
+            <Button size="icon" className="bg-white text-black dark:bg-zinc-950 dark:text-white" onClick={handleEditClick}>
+              <EditIcon className="text-orange-700" />
+            </Button>
+          </>)
         }
       </CardAction>
     </Card>
