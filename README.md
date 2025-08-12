@@ -1,54 +1,90 @@
-# React + TypeScript + Vite
+# Replify
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**Your workouts. Your way. Share. Discover. Repeat.**
 
-Currently, two official plugins are available:
+Replify is an Android app that makes it simple to create, share, and bookmark workout routines. Whether you’re building your own training plan, exploring routines from others, or saving your favorites for later, Replify helps you stay consistent and inspired.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## Expanding the ESLint configuration
+## ✨ Features
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+* **Create routines** – Build custom workout plans with exercises, sets, reps, and notes.
+* **Share with others** – Publish your routines so others can try them.
+* **Discover workouts** – Browse and search routines from the community.
+* **Bookmark favorites** – Save the routines you love for quick access.
+<!-- // * **Track your progress** – Keep all your workout ideas in one place. -->
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+<!-- 
+---
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## 📱 Screenshots
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+*(Add some screenshots of your app here once available)*
+-->
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+* Android 9.0 (Oreo) or later
+* An internet connection for sharing and browsing routines
+
+### Installation
+
+1. Download the latest **Replify** APK from the [Releases](https://github.com/fox5352/Repify/releases) section.
+2. Enable “Install from unknown sources” in your Android settings (if installing manually).
+3. Install and open the app.
+
+---
+
+## 🛠️ Tech Stack
+
+* **Language:** rust + typescript
+* **Framework:** tauri + react
+* **Database:** (local) + Cloud sync
+* **Authentication:** supabase Auth
+* **Storage:** Supabase Firestore
+
+---
+
+## 🤝 Contributing
+
+Contributions, bug reports, and feature requests are welcome!
+
+1. Fork the repository
+2. Create a feature branch:
+
+   ```bash
+   git checkout -b feature/my-feature
+   ```
+3. Commit your changes:
+
+   ```bash
+   git commit -m "Add my feature"
+   ```
+4. Push to the branch:
+
+   ```bash
+   git push origin feature/my-feature
+   ```
+5. Open a Pull Request
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License – see the [Apache License](LICENSE) file for details.
+
+---
+
+## 💬 Contact
+
+Have feedback or ideas? Reach out:
+
+* GitHub Issues: [Open an issue](https://github.com/fox5352/Repify/issues/new/choose)
+
+
+If you’d like, I can also make a **shorter, store-ready description** for your Google Play listing that’s punchy and user-friendly. That would help market Replify more effectively.
